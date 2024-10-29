@@ -41,9 +41,6 @@ void MainSystem::postInit()
 {
 	auto manager = Manager::Instance::get();
 	auto graphicsSystem = GraphicsSystem::Instance::get();
-	graphicsSystem->setWindowTitle("Voxfield");
-
-	
 	auto pbrLightingView = manager->add<PbrLightingRenderComponent>(graphicsSystem->camera);
 	PbrLightingRenderSystem::Instance::get()->loadCubemap(skyboxPath,
 		pbrLightingView->cubemap, pbrLightingView->sh, pbrLightingView->specular);

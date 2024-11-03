@@ -1,0 +1,110 @@
+name: CMake
+
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Release
+  VCPKG_CACHE: Windows-zlib_1.3.1-openssl_3.3.1
+
+jobs:
+  build:
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        token: ${{ secrets.ACCESS_TOKEN }}
+
+    - name: Set vcpkg environment variable
+      if: matrix.os == 'windows-latest'
+      shell: bash
+      run: echo "VCPKG_ROOT=$VCPKG_INSTALLATION_ROOT" >> $GITHUB_ENV
+
+    - name: Cache vcpkg packages
+      uses: actions/cache@v4
+      if: matrix.os == 'windows-latest'
+      id: vcpkg-cache
+      with:
+        path: C:/vcpkg/installed
+        key: ${{env.VCPKG_CACHE}}
+
+    - name: Install Ubuntu packages
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+        sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list https://packages.lunarg.com/vulkan/lunarg-vulkan-jammy.list
+        sudo apt-get update && sudo apt-get install zlib1g-dev libssl-dev xorg-dev vulkan-sdk
+
+    - name: Install macOS packages
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew update && brew install zlib openssl
+        curl -O https://sdk.lunarg.com/sdk/download/latest/mac/vulkan_sdk.zip
+        unzip vulkan_sdk.zip
+        sudo ./InstallVulkan.app/Contents/MacOS/InstallVulkan --al --da -c install com.lunarg.vulkan.core com.lunarg.vulkan.usr 
+
+    - name: Install Windows packages
+      if: ${{matrix.os == 'windows-latest' && steps.vcpkg-cache.outputs.cache-hit != 'true'}}
+      run: vcpkg install zlib:x64-windows-static openssl:x64-windows-static
+
+    - name: Install Windows VulkanSDK
+      if: matrix.os == 'windows-latest'
+      env:
+        SDK_PATH: C:/VulkanSDK
+      shell: bash
+      run: |
+        vulkanVersion=$(curl -s https://vulkan.lunarg.com/sdk/latest/windows.txt)
+        curl -O https://sdk.lunarg.com/sdk/download/latest/windows/vulkan_sdk.exe
+        ./vulkan_sdk.exe --al --da -c install
+        echo "VK_SDK_PATH=${{env.SDK_PATH}}/$vulkanVersion" >> $GITHUB_ENV
+        echo "VULKAN_SDK=${{env.SDK_PATH}}/$vulkanVersion" >> $GITHUB_ENV
+        echo "${{env.SDK_PATH}}/$vulkanVersion/Bin" >> $GITHUB_PATH
+
+    - name: Create build environment
+      run: cmake -E make_directory ${{runner.workspace}}/build
+
+    - name: Configure Ubuntu CMake
+      if: matrix.os == 'ubuntu-latest'
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -D GARDEN_USE_CLANG=TRUE
+
+    - name: Configure macOS CMake
+      if: matrix.os == 'macos-latest'
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+    - name: Configure Windows CMake
+      if: matrix.os == 'windows-latest'
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -T ClangCL -A x64
+
+    - name: Build project
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE --parallel
+
+    - name: Run tests
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: ctest -C $BUILD_TYPE
+
+    - name: Archive artifacts
+      if: startsWith(github.ref, 'refs/tags/')
+      working-directory: ${{runner.workspace}}
+      shell: bash
+      run: 7z a -mx9 ${{github.event.repository.name}}-${{github.ref_name}}-${{runner.os}}-${{runner.arch}}.zip ./build/*
+
+    - name: Release artifacts
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v2
+      with:
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+          files: ${{runner.workspace}}/*.zip

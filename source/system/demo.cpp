@@ -28,7 +28,7 @@ MainSystem::MainSystem()
 }
 MainSystem::~MainSystem()
 {
-	if (Manager::Instance::get()->isRunning())
+	if (Manager::Instance::get()->isRunning)
 	{
 		ECSM_UNSUBSCRIBE_FROM_EVENT("PostInit", MainSystem::postInit);
 		ECSM_UNSUBSCRIBE_FROM_EVENT("Update", MainSystem::update);

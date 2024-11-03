@@ -1,0 +1,48 @@
+# Garden Demo
+
+This is a demonstration project for the [Garden](https://github.com/cfnptr/garden) game engine. You can 
+use the provided [CMakeLists.txt](/CMakeLists.txt) to create your own project based on this demo.
+
+## Supported operating systems
+
+* Windows (10/11)
+* Ubuntu (22.04/24.04)
+* macOS (14/15)
+
+This list includes only those systems on which functionality testing is conducted.
+However, you can also compile it under any other Linux distribution or operating system.
+
+## Supported hardware
+
+### Graphics processing unit (GPU)
+
+* Nvidia [Kepler](https://en.wikipedia.org/wiki/Kepler_(microarchitecture)) microarchitecture and newer
+* AMD [GCN](https://en.wikipedia.org/wiki/Graphics_Core_Next) microarchitecture and newer
+* Intel [Gen9](https://en.wikichip.org/wiki/intel/microarchitectures/gen9) microarchitecture and newer
+* Apple [M1](https://en.wikipedia.org/wiki/Apple_M1) integrated GPU and newer (partial support)
+
+At least GPU with Vulkan API 1.1 support.
+
+### Central processing unit (CPU)
+
+* Intel [Haswell](https://en.wikipedia.org/wiki/Haswell_(microarchitecture)) microarchitecture and newer
+* AMD [Excavator](https://en.wikipedia.org/wiki/Excavator_(microarchitecture)) microarchitecture and newer
+* Apple [M1](https://en.wikipedia.org/wiki/Apple_M1) processor and newer
+
+These requirements are based on the support of the **AVX2** instruction set.
+If you want, you can freely disable it and compile for any other architecture, including **ARM**.
+
+## Build Voxfield ![CI](https://github.com/cfnptr/voxfield/actions/workflows/cmake.yml/badge.svg)
+
+1. Follow Garden building [instructions](https://github.com/cfnptr/garden/blob/main/BUILDING.md)
+2. Run ```git clone --progress --recursive https://github.com/cfnptr/garden-demo``` using **Terminal**
+3. Open garden-demo directory using **IDE** or use build [scripts](scripts/) script
+
+## Garden Shading Language (GSL)
+
+Documentation with all GLSL changes is [here](https://github.com/cfnptr/garden/blob/main/docs/GSL.md).
+You can install **Visual Studio Code** [extension](https://marketplace.visualstudio.com/items?itemName=cfnptr.gsl-linter) to highlight GSL syntax.
+
+## Third-party
+
+* [Garden](https://github.com/cfnptr/garden) (Apache-2.0 license)

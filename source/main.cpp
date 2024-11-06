@@ -116,7 +116,8 @@ static void entryPoint()
 	#endif
 
 	manager->initialize();
-	manager->start();
+	InputSystem::startRenderThread();
+
 	delete manager;
 }
 

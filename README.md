@@ -32,7 +32,7 @@ At least GPU with Vulkan API 1.1 support.
 These requirements are based on the support of the **AVX2** instruction set.
 If you want, you can freely disable it and compile for any other architecture, including **ARM**.
 
-## Build Voxfield ![CI](https://github.com/cfnptr/voxfield/actions/workflows/cmake.yml/badge.svg)
+## Build demo app ![CI](https://github.com/cfnptr/garden-demo/actions/workflows/cmake.yml/badge.svg)
 
 1. Follow Garden building [instructions](https://github.com/cfnptr/garden/blob/main/BUILDING.md)
 2. Run ```git clone --progress --recursive https://github.com/cfnptr/garden-demo``` using **Terminal**

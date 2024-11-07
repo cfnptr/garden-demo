@@ -73,11 +73,11 @@ static void entryPoint()
 	manager->createSystem<SettingsSystem>();
 	manager->createSystem<ResourceSystem>();
 	manager->createSystem<LinkSystem>();
-	manager->createSystem<SpawnerSystem>();
 	manager->createSystem<CameraSystem>();
-	manager->createSystem<FpvControllerSystem>();
 	manager->createSystem<TransformSystem>();
 	manager->createSystem<InputSystem>();
+	manager->createSystem<FpvControllerSystem>();
+	manager->createSystem<SpawnerSystem>();
 	manager->createSystem<AnimationSystem>();
 	manager->createSystem<PhysicsSystem>();
 	manager->createSystem<CharacterSystem>();

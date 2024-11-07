@@ -66,9 +66,9 @@ add_subdirectory(libraries/garden)
 
 configure_file(libraries/garden/cmake/app-defines.hpp.in include/demo/app-defines.hpp)
 
-if(NOT EXISTS ${PROJECT_SOURCE_DIR}/resources/images/cubemaps/kloofendal.exr)
-	file(DOWNLOAD https://dl.polyhaven.org/file/ph-assets/HDRIs/exr/1k/kloofendal_48d_partly_cloudy_puresky_1k.exr
-		${PROJECT_SOURCE_DIR}/resources/images/cubemaps/kloofendal.exr)
+if(NOT EXISTS ${PROJECT_SOURCE_DIR}/resources/images/cubemaps/puresky.hdr)
+	file(DOWNLOAD https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_48d_partly_cloudy_puresky_1k.hdr
+		${PROJECT_SOURCE_DIR}/resources/images/cubemaps/puresky.hdr)
 endif()
 
 #***********************************************************************************************************************

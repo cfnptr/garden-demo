@@ -19,7 +19,7 @@
 
 using namespace garden::demo;
 
-constexpr auto skyboxPath = "cubemaps/kloofendal";
+constexpr auto skyboxPath = "cubemaps/puresky";
 
 MainSystem::MainSystem()
 {

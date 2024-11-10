@@ -75,7 +75,6 @@ endif()
 file(GLOB_RECURSE GARDEN_DEMO_SOURCES source/*.cpp)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	configure_file(resources/images/windows/garden-demo.ico garden-demo.ico COPYONLY)
 	configure_file(libraries/garden/cmake/windows.rc.in garden-demo.rc)
 	list(APPEND GARDEN_DEMO_SOURCES ${PROJECT_BINARY_DIR}/garden-demo.rc)
 	if(GARDEN_DEBUG)

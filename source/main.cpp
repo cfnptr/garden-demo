@@ -23,19 +23,28 @@
 #include "garden/system/animation.hpp"
 #include "garden/system/character.hpp"
 #include "garden/system/fpv-controller.hpp"
+#include "garden/system/render/csm.hpp"
 #include "garden/system/render/mesh.hpp"
 #include "garden/system/render/fxaa.hpp"
+#include "garden/system/render/ssao.hpp"
 #include "garden/system/render/bloom.hpp"
 #include "garden/system/render/skybox.hpp"
 #include "garden/system/render/deferred.hpp"
 #include "garden/system/render/pbr-lighting.hpp"
 #include "garden/system/render/tone-mapping.hpp"
 #include "garden/system/render/auto-exposure.hpp"
+#include "garden/system/render/sprite/opaque.hpp"
+#include "garden/system/render/sprite/cutout.hpp"
+#include "garden/system/render/sprite/translucent.hpp"
+#include "garden/system/render/9-slice/opaque.hpp"
+#include "garden/system/render/9-slice/cutout.hpp"
+#include "garden/system/render/9-slice/translucent.hpp"
 
 #include "demo/app-defines.hpp"
 #include "demo/system/main.hpp"
 
 #if GARDEN_EDITOR
+#include "garden/system/render/imgui.hpp"
 #include "garden/editor/system/log.hpp"
 #include "garden/editor/system/ecs.hpp"
 #include "garden/editor/system/link.hpp"
@@ -46,8 +55,13 @@
 #include "garden/editor/system/transform.hpp"
 #include "garden/editor/system/hierarchy.hpp"
 #include "garden/editor/system/animation.hpp"
+#include "garden/editor/system/render/csm.hpp"
+#include "garden/editor/system/render/fxaa.hpp"
+#include "garden/editor/system/render/ssao.hpp"
 #include "garden/editor/system/render/bloom.hpp"
 #include "garden/editor/system/render/skybox.hpp"
+#include "garden/editor/system/render/sprite.hpp"
+#include "garden/editor/system/render/9-slice.hpp"
 #include "garden/editor/system/render/deferred.hpp"
 #include "garden/editor/system/render/pbr-lighting.hpp"
 #include "garden/editor/system/render/tone-mapping.hpp"
@@ -69,6 +83,7 @@ static void entryPoint()
 	manager->createSystem<DoNotDestroySystem>();
 	manager->createSystem<DoNotDuplicateSystem>();
 	manager->createSystem<DoNotSerializeSystem>();
+	manager->createSystem<BakedTransformSystem>();
 	manager->createSystem<LogSystem>();
 	manager->createSystem<SettingsSystem>();
 	manager->createSystem<ResourceSystem>();
@@ -81,11 +96,22 @@ static void entryPoint()
 	manager->createSystem<AnimationSystem>();
 	manager->createSystem<PhysicsSystem>();
 	manager->createSystem<CharacterSystem>();
+	#if GARDEN_DEBUG
+	manager->createSystem<ImGuiRenderSystem>();
+	#endif
 	manager->createSystem<GraphicsSystem>();
 	manager->createSystem<DeferredRenderSystem>();
 	manager->createSystem<SkyboxRenderSystem>();
 	manager->createSystem<MeshRenderSystem>();
-	manager->createSystem<PbrLightingRenderSystem>();
+	//manager->createSystem<OpaqueSpriteSystem>(true);
+	//manager->createSystem<CutoutSpriteSystem>(true);
+	//manager->createSystem<TransSpriteSystem>(true);
+	//manager->createSystem<Opaque9SliceSystem>(true);
+	//manager->createSystem<Cutout9SliceSystem>(true);
+	//manager->createSystem<Trans9SliceSystem>(true);
+	manager->createSystem<PbrLightingRenderSystem>(true, true);
+	manager->createSystem<CsmRenderSystem>();
+	manager->createSystem<SsaoRenderSystem>();
 	manager->createSystem<BloomRenderSystem>();
 	manager->createSystem<ToneMappingRenderSystem>();
 	manager->createSystem<AutoExposureRenderSystem>();
@@ -109,10 +135,16 @@ static void entryPoint()
 	manager->createSystem<MeshSelectorEditorSystem>();
 	manager->createSystem<MeshGizmosEditorSystem>();
 	manager->createSystem<DeferredRenderEditorSystem>();
+	manager->createSystem<SkyboxRenderEditorSystem>();
+	manager->createSystem<SpriteRenderEditorSystem>();
+	manager->createSystem<NineSliceRenderEditorSystem>();
 	manager->createSystem<PbrLightingRenderEditorSystem>();
+	manager->createSystem<CsmRenderEditorSystem>();
+	manager->createSystem<SsaoRenderEditorSystem>();
 	manager->createSystem<BloomRenderEditorSystem>();
 	manager->createSystem<ToneMappingRenderEditorSystem>();
 	manager->createSystem<AutoExposureRenderEditorSystem>();
+	manager->createSystem<FxaaRenderEditorSystem>();
 	#endif
 
 	manager->initialize();

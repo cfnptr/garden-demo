@@ -9,6 +9,7 @@ build-release/
 build-debug-clang/
 build-release-clang/
 build-xcode/
+resources/images/cubemaps/puresky.hdr
 
 ### Common ###
 .vs/

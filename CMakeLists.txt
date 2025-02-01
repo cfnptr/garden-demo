@@ -24,7 +24,7 @@ if(TARGET garden-demo)
 endif()
 
 if(NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/libraries/garden/CMakeLists.txt)
-	message(FATAL_ERROR "Use 'git submodule udate --init --recursive' to download Garden engine.")
+	message(FATAL_ERROR "Use 'git submodule update --init --recursive' to download Garden engine.")
 endif()
 
 include(libraries/garden/cmake/package-managers.cmake)

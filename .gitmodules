@@ -1,3 +1,6 @@
 [submodule "libraries/garden"]
 	path = libraries/garden
 	url = https://github.com/cfnptr/garden
+[submodule "resources/models/prototype"]
+	path = resources/models/prototype
+	url = https://github.com/KayKit-Game-Assets/KayKit-Prototype-Bits-1.0

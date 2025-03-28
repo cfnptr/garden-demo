@@ -23,6 +23,7 @@
 #include "garden/system/animation.hpp"
 #include "garden/system/character.hpp"
 #include "garden/system/fpv-controller.hpp"
+#include "garden/system/render/oit.hpp"
 #include "garden/system/render/csm.hpp"
 #include "garden/system/render/mesh.hpp"
 #include "garden/system/render/fxaa.hpp"
@@ -83,7 +84,7 @@ static void entryPoint()
 	manager->createSystem<DoNotDestroySystem>();
 	manager->createSystem<DoNotDuplicateSystem>();
 	manager->createSystem<DoNotSerializeSystem>();
-	manager->createSystem<BakedTransformSystem>();
+	manager->createSystem<StaticTransformSystem>();
 	manager->createSystem<LogSystem>();
 	manager->createSystem<SettingsSystem>();
 	manager->createSystem<ResourceSystem>();
@@ -100,7 +101,7 @@ static void entryPoint()
 	manager->createSystem<ImGuiRenderSystem>();
 	#endif
 	manager->createSystem<GraphicsSystem>();
-	manager->createSystem<DeferredRenderSystem>();
+	manager->createSystem<DeferredRenderSystem>(true, false);
 	manager->createSystem<SkyboxRenderSystem>();
 	manager->createSystem<MeshRenderSystem>();
 	//manager->createSystem<OpaqueSpriteSystem>(true);
@@ -112,6 +113,7 @@ static void entryPoint()
 	manager->createSystem<PbrLightingRenderSystem>(true, true);
 	manager->createSystem<CsmRenderSystem>();
 	manager->createSystem<SsaoRenderSystem>();
+	manager->createSystem<OitRenderSystem>();
 	manager->createSystem<BloomRenderSystem>();
 	manager->createSystem<ToneMappingRenderSystem>();
 	manager->createSystem<AutoExposureRenderSystem>();

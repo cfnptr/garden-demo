@@ -45,7 +45,7 @@ set(GARDEN_APP_VERSION_MAJOR ${GardenDemo_VERSION_MAJOR})
 set(GARDEN_APP_VERSION_MINOR ${GardenDemo_VERSION_MINOR})
 set(GARDEN_APP_VERSION_PATCH ${GardenDemo_VERSION_PATCH})
 set(GARDEN_APP_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/resources)
-set(GARDEN_APP_CACHES_DIR ${PROJECT_SOURCE_DIR}/.caches)
+set(GARDEN_APP_CACHE_DIR ${PROJECT_SOURCE_DIR}/.cache)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -89,13 +89,13 @@ endif()
 target_include_directories(garden-demo PUBLIC ${GARDEN_DEMO_INCLUDE_DIRS})
 target_link_libraries(garden-demo ${GARDEN_DEMO_LINK_LIBS})
 set_target_properties(garden-demo PROPERTIES OUTPUT_NAME ${GARDEN_APP_NAME})
-add_dependencies(garden-demo packer gslc equi2cube)
+add_dependencies(garden-demo packer gslc json2bson equi2cube)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
 	stripExecutable(garden-demo)
 endif()
 if(GARDEN_PACK_RESOURCES)
-	packResources(garden-demo ${GARDEN_APP_CACHES_DIR}
+	packResources(garden-demo ${GARDEN_APP_CACHE_DIR}
 		${GARDEN_APP_RESOURCES_DIR} ${Garden_SOURCE_DIR}/resources
 		${GARDEN_RELEASE_EDITOR} ${GARDEN_RELEASE_DEBUGGING})
 endif()

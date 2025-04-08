@@ -15,6 +15,7 @@
 #include "garden/main.hpp"
 #include "garden/system/log.hpp"
 #include "garden/system/link.hpp"
+#include "garden/system/thread.hpp"
 #include "garden/system/camera.hpp"
 #include "garden/system/spawner.hpp"
 #include "garden/system/settings.hpp"
@@ -34,12 +35,6 @@
 #include "garden/system/render/pbr-lighting.hpp"
 #include "garden/system/render/tone-mapping.hpp"
 #include "garden/system/render/auto-exposure.hpp"
-#include "garden/system/render/sprite/opaque.hpp"
-#include "garden/system/render/sprite/cutout.hpp"
-#include "garden/system/render/sprite/translucent.hpp"
-#include "garden/system/render/9-slice/opaque.hpp"
-#include "garden/system/render/9-slice/cutout.hpp"
-#include "garden/system/render/9-slice/translucent.hpp"
 
 #include "demo/app-defines.hpp"
 #include "demo/system/main.hpp"
@@ -104,12 +99,6 @@ static void entryPoint()
 	manager->createSystem<DeferredRenderSystem>(true, false);
 	manager->createSystem<SkyboxRenderSystem>();
 	manager->createSystem<MeshRenderSystem>();
-	//manager->createSystem<OpaqueSpriteSystem>(true);
-	//manager->createSystem<CutoutSpriteSystem>(true);
-	//manager->createSystem<TransSpriteSystem>(true);
-	//manager->createSystem<Opaque9SliceSystem>(true);
-	//manager->createSystem<Cutout9SliceSystem>(true);
-	//manager->createSystem<Trans9SliceSystem>(true);
 	manager->createSystem<PbrLightingRenderSystem>(true, true);
 	manager->createSystem<CsmRenderSystem>();
 	manager->createSystem<SsaoRenderSystem>();

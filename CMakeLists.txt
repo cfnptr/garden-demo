@@ -47,6 +47,20 @@ set(GARDEN_APP_VERSION_PATCH ${GardenDemo_VERSION_PATCH})
 set(GARDEN_APP_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/resources)
 set(GARDEN_APP_CACHE_DIR ${PROJECT_SOURCE_DIR}/.cache)
 
+set(GARDEN_DS_POOL_COMBINED_SAMPLER_COUNT 2048)
+set(GARDEN_DS_POOL_UNIFORM_BUFFER_COUNT 1024)
+set(GARDEN_DS_POOL_STORAGE_BUFFER_COUNT 512)
+set(GARDEN_DS_POOL_STORAGE_IMAGE_COUNT 256)
+set(GARDEN_DS_POOL_INPUT_ATTACHMENT_COUNT 128)
+
+# Use these setters for application debugging
+# set(GARDEN_USE_ASAN ON CACHE BOOL "" FORCE)
+# set(GARDEN_RELEASE_EDITOR ON CACHE BOOL "" FORCE)
+# set(GARDEN_RELEASE_DEBUGGING ON CACHE BOOL "" FORCE)
+# set(GARDEN_DEBUG_PACK_RESOURCES ON CACHE BOOL "" FORCE)
+# set(GARDEN_USE_GAPI_VALIDATIONS ON CACHE BOOL "" FORCE)
+# set(GARDEN_USE_TRACY_PROFILER ON CACHE BOOL "" FORCE)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
@@ -55,15 +69,7 @@ set(GARDEN_DEMO_LINK_LIBS garden)
 
 include(libraries/garden/cmake/compile-options.cmake)
 include(libraries/garden/cmake/publish-functions.cmake)
-
-# Use these setters for application debugging
-#set(GARDEN_RELEASE_EDITOR OFF CACHE BOOL "" FORCE)
-#set(GARDEN_RELEASE_DEBUGGING OFF CACHE BOOL "" FORCE)
-#set(GARDEN_DEBUG_PACK_RESOURCES ON CACHE BOOL "" FORCE)
-#set(GARDEN_USE_GAPI_VALIDATIONS OFF CACHE BOOL "" FORCE)
-#set(GARDEN_USE_TRACY_PROFILER ON CACHE BOOL "" FORCE)
 add_subdirectory(libraries/garden)
-
 configure_file(libraries/garden/cmake/app-defines.hpp.in include/demo/app-defines.hpp)
 
 if(NOT EXISTS ${PROJECT_SOURCE_DIR}/resources/images/cubemaps/puresky.hdr)
@@ -91,11 +97,11 @@ target_link_libraries(garden-demo ${GARDEN_DEMO_LINK_LIBS})
 set_target_properties(garden-demo PROPERTIES OUTPUT_NAME ${GARDEN_APP_NAME})
 add_dependencies(garden-demo packer gslc json2bson equi2cube)
 
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
+if(CMAKE_BUILD_TYPE STREQUAL "Release" AND NOT GARDEN_RELEASE_DEBUGGING)
 	stripExecutable(garden-demo)
 endif()
 if(GARDEN_PACK_RESOURCES)
 	packResources(garden-demo ${GARDEN_APP_CACHE_DIR}
 		${GARDEN_APP_RESOURCES_DIR} ${Garden_SOURCE_DIR}/resources
-		${GARDEN_RELEASE_EDITOR} ${GARDEN_RELEASE_DEBUGGING})
+		${GARDEN_APP_VERSION} ${GARDEN_RELEASE_EDITOR} ${GARDEN_RELEASE_DEBUGGING})
 endif()

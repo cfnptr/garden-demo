@@ -96,10 +96,14 @@ static void entryPoint()
 	manager->createSystem<ImGuiRenderSystem>();
 	#endif
 	manager->createSystem<GraphicsSystem>();
-	manager->createSystem<DeferredRenderSystem>(true, false);
+	manager->createSystem<DeferredRenderSystem>();
 	manager->createSystem<SkyboxRenderSystem>();
 	manager->createSystem<MeshRenderSystem>();
-	manager->createSystem<PbrLightingRenderSystem>(true, true);
+	// manager->createSystem<OpaqueSpriteSystem>();
+	// manager->createSystem<CutoutSpriteSystem>();
+	// manager->createSystem<Opaque9SliceSystem>();
+	// manager->createSystem<Cutout9SliceSystem>();
+	manager->createSystem<PbrLightingRenderSystem>();
 	manager->createSystem<CsmRenderSystem>();
 	manager->createSystem<SsaoRenderSystem>();
 	manager->createSystem<OitRenderSystem>();

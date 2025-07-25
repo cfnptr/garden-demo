@@ -41,8 +41,8 @@ void MainSystem::postInit()
 {
 	auto manager = Manager::Instance::get();
 	auto graphicsSystem = GraphicsSystem::Instance::get();
-	auto pbrLightingView = manager->add<PbrLightingRenderComponent>(graphicsSystem->camera);
-	PbrLightingRenderSystem::Instance::get()->loadCubemap(skyboxPath,
+	auto pbrLightingView = manager->add<PbrLightingComponent>(graphicsSystem->camera);
+	PbrLightingSystem::Instance::get()->loadCubemap(skyboxPath,
 		pbrLightingView->cubemap, pbrLightingView->sh, pbrLightingView->specular);
 	manager->add<SkyboxRenderComponent>(graphicsSystem->camera);
 }
@@ -57,7 +57,7 @@ void MainSystem::update()
 		auto skyboxPipeline = graphicsSystem->get(skyboxSystem->getPipeline());
 		if (skyboxPipeline->isLoaded())
 		{
-			auto pbrLightngSystem = PbrLightingRenderSystem::Instance::get();
+			auto pbrLightngSystem = PbrLightingSystem::Instance::get();
 			auto pbrLightingView = pbrLightngSystem->getComponent(graphicsSystem->camera);
 			skyboxView->cubemap = pbrLightingView->cubemap;
 			skyboxView->descriptorSet = skyboxSystem->createSharedDS(

@@ -24,14 +24,16 @@
 #include "garden/system/animation.hpp"
 #include "garden/system/character.hpp"
 #include "garden/system/fpv-controller.hpp"
+#include "garden/system/render/hiz.hpp"
 #include "garden/system/render/oit.hpp"
 #include "garden/system/render/csm.hpp"
 #include "garden/system/render/mesh.hpp"
 #include "garden/system/render/fxaa.hpp"
-#include "garden/system/render/ssao.hpp"
+#include "garden/system/render/hbao.hpp"
 #include "garden/system/render/bloom.hpp"
 #include "garden/system/render/skybox.hpp"
 #include "garden/system/render/deferred.hpp"
+#include "garden/system/render/gpu-process.hpp"
 #include "garden/system/render/pbr-lighting.hpp"
 #include "garden/system/render/tone-mapping.hpp"
 #include "garden/system/render/auto-exposure.hpp"
@@ -53,7 +55,7 @@
 #include "garden/editor/system/animation.hpp"
 #include "garden/editor/system/render/csm.hpp"
 #include "garden/editor/system/render/fxaa.hpp"
-#include "garden/editor/system/render/ssao.hpp"
+#include "garden/editor/system/render/hbao.hpp"
 #include "garden/editor/system/render/bloom.hpp"
 #include "garden/editor/system/render/skybox.hpp"
 #include "garden/editor/system/render/sprite.hpp"
@@ -96,6 +98,7 @@ static void entryPoint()
 	manager->createSystem<ImGuiRenderSystem>();
 	#endif
 	manager->createSystem<GraphicsSystem>();
+	manager->createSystem<GpuProcessSystem>();
 	manager->createSystem<DeferredRenderSystem>();
 	manager->createSystem<SkyboxRenderSystem>();
 	manager->createSystem<MeshRenderSystem>();
@@ -103,13 +106,14 @@ static void entryPoint()
 	// manager->createSystem<CutoutSpriteSystem>();
 	// manager->createSystem<Opaque9SliceSystem>();
 	// manager->createSystem<Cutout9SliceSystem>();
-	manager->createSystem<PbrLightingRenderSystem>();
+	manager->createSystem<HizRenderSystem>();
+	manager->createSystem<PbrLightingSystem>();
 	manager->createSystem<CsmRenderSystem>();
-	manager->createSystem<SsaoRenderSystem>();
+	manager->createSystem<HbaoRenderSystem>();
 	manager->createSystem<OitRenderSystem>();
 	manager->createSystem<BloomRenderSystem>();
-	manager->createSystem<ToneMappingRenderSystem>();
-	manager->createSystem<AutoExposureRenderSystem>();
+	manager->createSystem<ToneMappingSystem>();
+	manager->createSystem<AutoExposureSystem>();
 	manager->createSystem<FxaaRenderSystem>();
 	manager->createSystem<ThreadSystem>();
 
@@ -133,12 +137,12 @@ static void entryPoint()
 	manager->createSystem<SkyboxRenderEditorSystem>();
 	manager->createSystem<SpriteRenderEditorSystem>();
 	manager->createSystem<NineSliceRenderEditorSystem>();
-	manager->createSystem<PbrLightingRenderEditorSystem>();
+	manager->createSystem<PbrLightingEditorSystem>();
 	manager->createSystem<CsmRenderEditorSystem>();
-	manager->createSystem<SsaoRenderEditorSystem>();
+	manager->createSystem<HbaoRenderEditorSystem>();
 	manager->createSystem<BloomRenderEditorSystem>();
-	manager->createSystem<ToneMappingRenderEditorSystem>();
-	manager->createSystem<AutoExposureRenderEditorSystem>();
+	manager->createSystem<ToneMappingEditorSystem>();
+	manager->createSystem<AutoExposureEditorSystem>();
 	manager->createSystem<FxaaRenderEditorSystem>();
 	#endif
 

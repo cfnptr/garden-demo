@@ -35,8 +35,10 @@ If you want, you can freely disable it and compile for any other architecture, i
 ## Build demo app ![CI](https://github.com/cfnptr/garden-demo/actions/workflows/cmake.yml/badge.svg)
 
 1. Follow Garden building [instructions](https://github.com/cfnptr/garden/blob/main/BUILDING.md)
-2. Run ```git clone --progress --recursive https://github.com/cfnptr/garden-demo``` using **Terminal**
-3. Open garden-demo directory using **IDE** or use build [scripts](scripts/) script
+4. Run ```git clone --progress --recursive https://github.com/cfnptr/garden-demo``` using **Terminal**
+5. Open garden-demo directory using **IDE** or use build [scripts](scripts/) script
+
+Make sure to install "C++ Clang tools for Windows" for Visual Studio! (Windows only)
 
 ## Garden Shading Language (GSL)
 

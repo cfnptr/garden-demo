@@ -55,10 +55,10 @@ set(GARDEN_DS_POOL_INPUT_ATTACHMENT_COUNT 128)
 set(GARDEN_DS_POOL_ACCEL_STRUCTURE_COUNT 32)
 
 # Use these setters for application debugging
-# set(GARDEN_RELEASE_EDITOR ON CACHE BOOL "" FORCE)
-# set(GARDEN_RELEASE_DEBUGGING ON CACHE BOOL "" FORCE)
+set(GARDEN_RELEASE_EDITOR ON CACHE BOOL "" FORCE)
+set(GARDEN_RELEASE_DEBUGGING ON CACHE BOOL "" FORCE)
 # set(GARDEN_DEBUG_PACK_RESOURCES ON CACHE BOOL "" FORCE)
-# set(GARDEN_USE_GAPI_VALIDATIONS ON CACHE BOOL "" FORCE)
+set(GARDEN_USE_GAPI_VALIDATIONS ON CACHE BOOL "" FORCE)
 # set(GARDEN_USE_TRACY_PROFILER ON CACHE BOOL "" FORCE)
 # set(GARDEN_USE_ASAN ON CACHE BOOL "" FORCE)
 
@@ -66,18 +66,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 set(GARDEN_DEMO_INCLUDE_DIRS ${PROJECT_BINARY_DIR}/include 
-	${PROJECT_SOURCE_DIR}/include, resources/shaders)
+	${PROJECT_SOURCE_DIR}/include resources/shaders)
 set(GARDEN_DEMO_LINK_LIBS garden)
 
 include(libraries/garden/cmake/compile-options.cmake)
 include(libraries/garden/cmake/publish-functions.cmake)
 add_subdirectory(libraries/garden)
 configure_file(libraries/garden/cmake/app-defines.hpp.in include/demo/app-defines.hpp)
-
-if(NOT EXISTS ${PROJECT_SOURCE_DIR}/resources/images/cubemaps/puresky.hdr)
-	file(DOWNLOAD https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_48d_partly_cloudy_puresky_1k.hdr
-		${PROJECT_SOURCE_DIR}/resources/images/cubemaps/puresky.hdr)
-endif()
 
 #***********************************************************************************************************************
 file(GLOB_RECURSE GARDEN_DEMO_SOURCES source/*.cpp)

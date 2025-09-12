@@ -48,3 +48,4 @@ You can install **Visual Studio Code** [extension](https://marketplace.visualstu
 ## Third-party
 
 * [Garden](https://github.com/cfnptr/garden) (Apache-2.0 license)
+* [Prototype Bits](https://github.com/KayKit-Game-Assets/KayKit-Prototype-Bits-1.0) (CC0 license)

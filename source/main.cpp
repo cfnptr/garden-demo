@@ -31,8 +31,9 @@
 #include "garden/system/render/fxaa.hpp"
 #include "garden/system/render/hbao.hpp"
 #include "garden/system/render/bloom.hpp"
-#include "garden/system/render/skybox.hpp"
+#include "garden/system/render/model.hpp"
 #include "garden/system/render/deferred.hpp"
+#include "garden/system/render/atmosphere.hpp"
 #include "garden/system/render/gpu-process.hpp"
 #include "garden/system/render/pbr-lighting.hpp"
 #include "garden/system/render/tone-mapping.hpp"
@@ -57,10 +58,11 @@
 #include "garden/editor/system/render/fxaa.hpp"
 #include "garden/editor/system/render/hbao.hpp"
 #include "garden/editor/system/render/bloom.hpp"
-#include "garden/editor/system/render/skybox.hpp"
+#include "garden/editor/system/render/model.hpp"
 #include "garden/editor/system/render/sprite.hpp"
 #include "garden/editor/system/render/9-slice.hpp"
 #include "garden/editor/system/render/deferred.hpp"
+#include "garden/editor/system/render/atmosphere.hpp"
 #include "garden/editor/system/render/pbr-lighting.hpp"
 #include "garden/editor/system/render/tone-mapping.hpp"
 #include "garden/editor/system/render/auto-exposure.hpp"
@@ -100,7 +102,8 @@ static void entryPoint()
 	manager->createSystem<GraphicsSystem>();
 	manager->createSystem<GpuProcessSystem>();
 	manager->createSystem<DeferredRenderSystem>();
-	manager->createSystem<SkyboxRenderSystem>();
+	manager->createSystem<AtmosphereRenderSystem>();
+	manager->createSystem<ModelRenderSystem>();
 	manager->createSystem<MeshRenderSystem>();
 	// manager->createSystem<OpaqueSpriteSystem>();
 	// manager->createSystem<CutoutSpriteSystem>();
@@ -134,7 +137,8 @@ static void entryPoint()
 	manager->createSystem<MeshSelectorEditorSystem>();
 	manager->createSystem<MeshGizmosEditorSystem>();
 	manager->createSystem<DeferredRenderEditorSystem>();
-	manager->createSystem<SkyboxRenderEditorSystem>();
+	manager->createSystem<AtmosphereEditorSystem>();
+	manager->createSystem<ModelRenderEditorSystem>();
 	manager->createSystem<SpriteRenderEditorSystem>();
 	manager->createSystem<NineSliceRenderEditorSystem>();
 	manager->createSystem<PbrLightingEditorSystem>();

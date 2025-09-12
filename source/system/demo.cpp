@@ -14,24 +14,20 @@
 
 #include "demo/system/main.hpp"
 #include "garden/system/graphics.hpp"
-#include "garden/system/render/skybox.hpp"
+#include "garden/system/transform.hpp"
 #include "garden/system/render/pbr-lighting.hpp"
 
 using namespace garden::demo;
 
-constexpr auto skyboxPath = "cubemaps/puresky";
-
 MainSystem::MainSystem()
 {
 	ECSM_SUBSCRIBE_TO_EVENT("PostInit", MainSystem::postInit);
-	ECSM_SUBSCRIBE_TO_EVENT("Update", MainSystem::update);
 }
 MainSystem::~MainSystem()
 {
 	if (Manager::Instance::get()->isRunning)
 	{
 		ECSM_UNSUBSCRIBE_FROM_EVENT("PostInit", MainSystem::postInit);
-		ECSM_UNSUBSCRIBE_FROM_EVENT("Update", MainSystem::update);
 	}
 
 	unsetSingleton();
@@ -41,27 +37,15 @@ void MainSystem::postInit()
 {
 	auto manager = Manager::Instance::get();
 	auto graphicsSystem = GraphicsSystem::Instance::get();
-	auto pbrLightingView = manager->add<PbrLightingComponent>(graphicsSystem->camera);
-	PbrLightingSystem::Instance::get()->loadCubemap(skyboxPath,
-		pbrLightingView->cubemap, pbrLightingView->sh, pbrLightingView->specular);
-	manager->add<SkyboxRenderComponent>(graphicsSystem->camera);
-}
-void MainSystem::update()
-{
-	auto graphicsSystem = GraphicsSystem::Instance::get();
-	auto skyboxSystem = SkyboxRenderSystem::Instance::get();
-	auto skyboxView = skyboxSystem->getComponent(graphicsSystem->camera);
 
-	if (!skyboxView->descriptorSet)
-	{
-		auto skyboxPipeline = graphicsSystem->get(skyboxSystem->getPipeline());
-		if (skyboxPipeline->isLoaded())
-		{
-			auto pbrLightngSystem = PbrLightingSystem::Instance::get();
-			auto pbrLightingView = pbrLightngSystem->getComponent(graphicsSystem->camera);
-			skyboxView->cubemap = pbrLightingView->cubemap;
-			skyboxView->descriptorSet = skyboxSystem->createSharedDS(
-				skyboxPath, ID<Image>(pbrLightingView->cubemap));
-		}
-	}
+	auto sun = manager->createEntity();
+	auto transformView = manager->add<TransformComponent>(sun);
+	transformView->setRotation(fromEulerAngles(-f32x4(1.0f, 3.0f, 2.0f)));
+	#if GARDEN_DEBUG || GARDEN_EDITOR
+	transformView->debugName = "Sun";
+	#endif
+	graphicsSystem->directionalLight = sun;
+	
+	auto pbrLightingView = manager->add<PbrLightingComponent>(graphicsSystem->camera);
+	pbrLightingView->setCubemapMode(PbrCubemapMode::Dynamic);
 }

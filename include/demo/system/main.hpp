@@ -26,7 +26,6 @@ class MainSystem final : public System, public Singleton<MainSystem>
 	~MainSystem() final;
 
 	void postInit();
-	void update();
 
 	friend class ecsm::Manager;
 };

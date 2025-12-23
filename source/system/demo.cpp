@@ -19,13 +19,10 @@
 
 using namespace garden::demo;
 
-constexpr auto skyboxPath = "cubemaps/puresky";
-
 MainSystem::MainSystem()
 {
 	auto manager = Manager::Instance::get();
 	ECSM_SUBSCRIBE_TO_EVENT("PostInit", MainSystem::postInit);
-	ECSM_SUBSCRIBE_TO_EVENT("Update", MainSystem::update);
 }
 MainSystem::~MainSystem()
 {
@@ -33,7 +30,6 @@ MainSystem::~MainSystem()
 	{
 		auto manager = Manager::Instance::get();
 		ECSM_UNSUBSCRIBE_FROM_EVENT("PostInit", MainSystem::postInit);
-		ECSM_UNSUBSCRIBE_FROM_EVENT("Update", MainSystem::update);
 	}
 
 	unsetSingleton();
@@ -57,7 +53,4 @@ void MainSystem::postInit()
 	manager->add<DoNotSerializeComponent>(sun);
 	#endif
 	graphicsSystem->directionalLight = sun;
-}
-void MainSystem::update()
-{
 }

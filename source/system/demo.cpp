@@ -14,7 +14,7 @@
 
 #include "demo/system/main.hpp"
 #include "garden/system/graphics.hpp"
-#include "garden/system/render/skybox.hpp"
+#include "garden/system/transform.hpp"
 #include "garden/system/render/pbr-lighting.hpp"
 
 using namespace garden::demo;
@@ -23,6 +23,7 @@ constexpr auto skyboxPath = "cubemaps/puresky";
 
 MainSystem::MainSystem()
 {
+	auto manager = Manager::Instance::get();
 	ECSM_SUBSCRIBE_TO_EVENT("PostInit", MainSystem::postInit);
 	ECSM_SUBSCRIBE_TO_EVENT("Update", MainSystem::update);
 }
@@ -30,6 +31,7 @@ MainSystem::~MainSystem()
 {
 	if (Manager::Instance::get()->isRunning)
 	{
+		auto manager = Manager::Instance::get();
 		ECSM_UNSUBSCRIBE_FROM_EVENT("PostInit", MainSystem::postInit);
 		ECSM_UNSUBSCRIBE_FROM_EVENT("Update", MainSystem::update);
 	}
@@ -42,26 +44,20 @@ void MainSystem::postInit()
 	auto manager = Manager::Instance::get();
 	auto graphicsSystem = GraphicsSystem::Instance::get();
 	auto pbrLightingView = manager->add<PbrLightingComponent>(graphicsSystem->camera);
-	PbrLightingSystem::Instance::get()->loadCubemap(skyboxPath,
-		pbrLightingView->cubemap, pbrLightingView->sh, pbrLightingView->specular);
-	manager->add<SkyboxRenderComponent>(graphicsSystem->camera);
+	pbrLightingView->setCubemapMode(PbrCubemapMode::Dynamic);
+
+	auto sun = manager->createEntity();
+	manager->reserveComponents(sun, 4);
+
+	auto transformView = manager->add<TransformComponent>(sun);
+	transformView->setRotation(lookAtQuat(normalize3(-f32x4(1.0f, 6.0f, 2.0f))));
+	#if GARDEN_DEBUG || GARDEN_EDITOR
+	transformView->debugName = "Sun";
+	manager->add<DoNotDestroyComponent>(sun);
+	manager->add<DoNotSerializeComponent>(sun);
+	#endif
+	graphicsSystem->directionalLight = sun;
 }
 void MainSystem::update()
 {
-	auto graphicsSystem = GraphicsSystem::Instance::get();
-	auto skyboxSystem = SkyboxRenderSystem::Instance::get();
-	auto skyboxView = skyboxSystem->getComponent(graphicsSystem->camera);
-
-	if (!skyboxView->descriptorSet)
-	{
-		auto skyboxPipeline = graphicsSystem->get(skyboxSystem->getPipeline());
-		if (skyboxPipeline->isLoaded())
-		{
-			auto pbrLightngSystem = PbrLightingSystem::Instance::get();
-			auto pbrLightingView = pbrLightngSystem->getComponent(graphicsSystem->camera);
-			skyboxView->cubemap = pbrLightingView->cubemap;
-			skyboxView->descriptorSet = skyboxSystem->createSharedDS(
-				skyboxPath, ID<Image>(pbrLightingView->cubemap));
-		}
-	}
 }

@@ -62,11 +62,14 @@ set(GARDEN_DS_POOL_ACCEL_STRUCTURE_COUNT 32)
 # set(GARDEN_USE_TRACY_PROFILER ON CACHE BOOL "" FORCE)
 # set(GARDEN_USE_ASAN ON CACHE BOOL "" FORCE)
 
+set(GARDEN_USE_NVIDIA_DLSS ON CACHE BOOL "" FORCE)
+# set(GARDEN_USE_STEAMWORKS_SDK ON CACHE BOOL "" FORCE)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 set(GARDEN_DEMO_INCLUDE_DIRS ${PROJECT_BINARY_DIR}/include 
-	${PROJECT_SOURCE_DIR}/include, resources/shaders)
+	${PROJECT_SOURCE_DIR}/include resources/shaders)
 set(GARDEN_DEMO_LINK_LIBS garden)
 
 include(libraries/garden/cmake/compile-options.cmake)
@@ -99,11 +102,18 @@ target_link_libraries(garden-demo ${GARDEN_DEMO_LINK_LIBS})
 set_target_properties(garden-demo PROPERTIES OUTPUT_NAME ${GARDEN_APP_NAME})
 add_dependencies(garden-demo packer gslc json2bson equi2cube)
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	set_target_properties(garden-demo PROPERTIES BUILD_RPATH "\$ORIGIN")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+	set_target_properties(garden-demo PROPERTIES BUILD_RPATH "@loader_path")
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL "Release" AND NOT GARDEN_RELEASE_DEBUGGING)
 	stripExecutable(garden-demo)
 endif()
 if(GARDEN_PACK_RESOURCES)
-	packResources(garden-demo ${GARDEN_APP_CACHE_DIR}
-		${GARDEN_APP_RESOURCES_DIR} ${Garden_SOURCE_DIR}/resources
-		${GARDEN_APP_VERSION} ${GARDEN_RELEASE_EDITOR} ${GARDEN_RELEASE_DEBUGGING})
+	set(GARDEN_DEMO_RESOURCES)
+	packResources(garden-demo ${GARDEN_APP_CACHE_DIR} ${GARDEN_APP_RESOURCES_DIR} 
+		${Garden_SOURCE_DIR}/resources ${GARDEN_APP_VERSION} ${GARDEN_RELEASE_EDITOR} 
+		${GARDEN_RELEASE_DEBUGGING} ${GARDEN_DEMO_RESOURCES})
 endif()

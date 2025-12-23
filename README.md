@@ -21,7 +21,7 @@ However, you can also compile it under any other Linux distribution or operating
 * Intel [Gen9](https://en.wikichip.org/wiki/intel/microarchitectures/gen9) microarchitecture and newer
 * Apple [M1](https://en.wikipedia.org/wiki/Apple_M1) integrated GPU and newer (partial support)
 
-At least GPU with Vulkan API 1.1 support.
+At least GPU with Vulkan API 1.2 support.
 
 ### Central processing unit (CPU)
 
@@ -29,8 +29,8 @@ At least GPU with Vulkan API 1.1 support.
 * AMD [Excavator](https://en.wikipedia.org/wiki/Excavator_(microarchitecture)) microarchitecture and newer
 * Apple [M1](https://en.wikipedia.org/wiki/Apple_M1) processor and newer
 
-These requirements are based on the support of the [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) instruction set in the x86 architecture.
-If you want, you can freely disable it and compile for any other architecture, including **ARM**.
+These requirements are based on the support of the [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) 
+instruction set in the x86 architecture. If you want, you can freely disable it and compile for older x86 CPUs.
 
 ## Build demo app ![CI](https://github.com/cfnptr/garden-demo/actions/workflows/cmake.yml/badge.svg)
 

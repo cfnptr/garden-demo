@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "demo/app-defines.hpp"
+#include "demo/system/main.hpp"
+
 #include "garden/main.hpp"
+#include "garden/system/ui.hpp"
 #include "garden/system/log.hpp"
 #include "garden/system/link.hpp"
 #include "garden/system/thread.hpp"
@@ -23,23 +27,23 @@
 #include "garden/system/transform.hpp"
 #include "garden/system/animation.hpp"
 #include "garden/system/character.hpp"
-#include "garden/system/fpv-controller.hpp"
+#include "garden/system/steam-api.hpp"
+#include "garden/system/controller/fpv.hpp"
 #include "garden/system/render/hiz.hpp"
 #include "garden/system/render/oit.hpp"
 #include "garden/system/render/csm.hpp"
 #include "garden/system/render/mesh.hpp"
 #include "garden/system/render/fxaa.hpp"
 #include "garden/system/render/hbao.hpp"
+#include "garden/system/render/dlss.hpp"
+#include "garden/system/render/blur.hpp"
 #include "garden/system/render/bloom.hpp"
-#include "garden/system/render/skybox.hpp"
 #include "garden/system/render/deferred.hpp"
+#include "garden/system/render/atmosphere.hpp"
 #include "garden/system/render/gpu-process.hpp"
 #include "garden/system/render/pbr-lighting.hpp"
 #include "garden/system/render/tone-mapping.hpp"
 #include "garden/system/render/auto-exposure.hpp"
-
-#include "demo/app-defines.hpp"
-#include "demo/system/main.hpp"
 
 #if GARDEN_EDITOR
 #include "garden/system/render/imgui.hpp"
@@ -55,12 +59,13 @@
 #include "garden/editor/system/animation.hpp"
 #include "garden/editor/system/render/csm.hpp"
 #include "garden/editor/system/render/fxaa.hpp"
+#include "garden/editor/system/render/dlss.hpp"
 #include "garden/editor/system/render/hbao.hpp"
 #include "garden/editor/system/render/bloom.hpp"
-#include "garden/editor/system/render/skybox.hpp"
 #include "garden/editor/system/render/sprite.hpp"
 #include "garden/editor/system/render/9-slice.hpp"
 #include "garden/editor/system/render/deferred.hpp"
+#include "garden/editor/system/render/atmosphere.hpp"
 #include "garden/editor/system/render/pbr-lighting.hpp"
 #include "garden/editor/system/render/tone-mapping.hpp"
 #include "garden/editor/system/render/auto-exposure.hpp"
@@ -75,8 +80,15 @@ using namespace garden::demo;
 
 static void entryPoint()
 {
+	ToneMappingSystem::Options toneMappingOptions;
+	toneMappingOptions.useBloomBuffer = true;
+
 	auto manager = new Manager();
 	createAppSystem(manager);
+
+	#if GARDEN_STEAMWORKS_SDK
+	manager->createSystem<SteamApiSystem>();
+	#endif
 	manager->createSystem<MainSystem>();
 	manager->createSystem<DoNotDestroySystem>();
 	manager->createSystem<DoNotDuplicateSystem>();
@@ -85,6 +97,7 @@ static void entryPoint()
 	manager->createSystem<LogSystem>();
 	manager->createSystem<SettingsSystem>();
 	manager->createSystem<ResourceSystem>();
+	// manager->createSystem<LocaleSystem>();
 	manager->createSystem<LinkSystem>();
 	manager->createSystem<CameraSystem>();
 	manager->createSystem<TransformSystem>();
@@ -92,6 +105,14 @@ static void entryPoint()
 	manager->createSystem<FpvControllerSystem>();
 	manager->createSystem<SpawnerSystem>();
 	manager->createSystem<AnimationSystem>();
+	manager->createSystem<TextSystem>();
+	manager->createSystem<UiTransformSystem>();
+	manager->createSystem<UiScissorSystem>();
+	manager->createSystem<UiTriggerSystem>();
+	manager->createSystem<UiLabelSystem>();
+	manager->createSystem<UiButtonSystem>();
+	manager->createSystem<UiCheckboxSystem>();
+	manager->createSystem<UiInputSystem>();
 	manager->createSystem<PhysicsSystem>();
 	manager->createSystem<CharacterSystem>();
 	#if GARDEN_DEBUG
@@ -100,8 +121,10 @@ static void entryPoint()
 	manager->createSystem<GraphicsSystem>();
 	manager->createSystem<GpuProcessSystem>();
 	manager->createSystem<DeferredRenderSystem>();
-	manager->createSystem<SkyboxRenderSystem>();
+	manager->createSystem<AtmosphereRenderSystem>();
+	// manager->createSystem<CloudsRenderSystem>();
 	manager->createSystem<MeshRenderSystem>();
+	manager->createSystem<ModelStoreSystem>();
 	// manager->createSystem<OpaqueSpriteSystem>();
 	// manager->createSystem<CutoutSpriteSystem>();
 	// manager->createSystem<Opaque9SliceSystem>();
@@ -110,12 +133,17 @@ static void entryPoint()
 	manager->createSystem<PbrLightingSystem>();
 	manager->createSystem<CsmRenderSystem>();
 	manager->createSystem<HbaoRenderSystem>();
+	#if GARDEN_NVIDIA_DLSS
+	manager->createSystem<DlssRenderSystem>();
+	#endif
 	manager->createSystem<OitRenderSystem>();
 	manager->createSystem<BloomRenderSystem>();
-	manager->createSystem<ToneMappingSystem>();
+	manager->createSystem<ToneMappingSystem>(toneMappingOptions);
 	manager->createSystem<AutoExposureSystem>();
+	manager->createSystem<BlurRenderSystem>();
 	manager->createSystem<FxaaRenderSystem>();
 	manager->createSystem<ThreadSystem>();
+	// manager->createSystem<NetworkSystem>();
 
 	#if GARDEN_EDITOR
 	manager->createSystem<EditorRenderSystem>();
@@ -127,6 +155,13 @@ static void entryPoint()
 	manager->createSystem<CameraEditorSystem>();
 	manager->createSystem<TransformEditorSystem>();
 	manager->createSystem<AnimationEditorSystem>();
+	manager->createSystem<UiTransformEditorSystem>();
+	manager->createSystem<UiScissorEditorSystem>();
+	manager->createSystem<UiTriggerEditorSystem>();
+	manager->createSystem<UiLabelEditorSystem>();
+	manager->createSystem<UiButtonEditorSystem>();
+	manager->createSystem<UiCheckboxEditorSystem>();
+	manager->createSystem<UiInputEditorSystem>();
 	manager->createSystem<PhysicsEditorSystem>();
 	manager->createSystem<GraphicsEditorSystem>();
 	manager->createSystem<GpuResourceEditorSystem>();
@@ -134,12 +169,15 @@ static void entryPoint()
 	manager->createSystem<MeshSelectorEditorSystem>();
 	manager->createSystem<MeshGizmosEditorSystem>();
 	manager->createSystem<DeferredRenderEditorSystem>();
-	manager->createSystem<SkyboxRenderEditorSystem>();
+	manager->createSystem<AtmosphereEditorSystem>();
 	manager->createSystem<SpriteRenderEditorSystem>();
-	manager->createSystem<NineSliceRenderEditorSystem>();
+	manager->createSystem<NineSliceEditorSystem>();
 	manager->createSystem<PbrLightingEditorSystem>();
 	manager->createSystem<CsmRenderEditorSystem>();
 	manager->createSystem<HbaoRenderEditorSystem>();
+	#if GARDEN_NVIDIA_DLSS
+	manager->createSystem<DlssRenderEditorSystem>();
+	#endif
 	manager->createSystem<BloomRenderEditorSystem>();
 	manager->createSystem<ToneMappingEditorSystem>();
 	manager->createSystem<AutoExposureEditorSystem>();

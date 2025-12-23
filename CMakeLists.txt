@@ -77,11 +77,6 @@ include(libraries/garden/cmake/publish-functions.cmake)
 add_subdirectory(libraries/garden)
 configure_file(libraries/garden/cmake/app-defines.hpp.in include/demo/app-defines.hpp)
 
-if(NOT EXISTS ${PROJECT_SOURCE_DIR}/resources/images/cubemaps/puresky.hdr)
-	file(DOWNLOAD https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_48d_partly_cloudy_puresky_1k.hdr
-		${PROJECT_SOURCE_DIR}/resources/images/cubemaps/puresky.hdr)
-endif()
-
 #***********************************************************************************************************************
 file(GLOB_RECURSE GARDEN_DEMO_SOURCES source/*.cpp)
 

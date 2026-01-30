@@ -1,4 +1,4 @@
-// Copyright 2024-2025 Nikita Fediuchin. All rights reserved.
+// Copyright 2024-2026 Nikita Fediuchin. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@
 #include "garden/system/render/dlss.hpp"
 #include "garden/system/render/blur.hpp"
 #include "garden/system/render/bloom.hpp"
+#include "garden/system/render/clouds.hpp"
 #include "garden/system/render/deferred.hpp"
 #include "garden/system/render/atmosphere.hpp"
 #include "garden/system/render/gpu-process.hpp"
@@ -62,6 +63,7 @@
 #include "garden/editor/system/render/dlss.hpp"
 #include "garden/editor/system/render/hbao.hpp"
 #include "garden/editor/system/render/bloom.hpp"
+#include "garden/editor/system/render/clouds.hpp"
 #include "garden/editor/system/render/sprite.hpp"
 #include "garden/editor/system/render/9-slice.hpp"
 #include "garden/editor/system/render/deferred.hpp"
@@ -86,6 +88,7 @@ static void entryPoint()
 	auto manager = new Manager();
 	createAppSystem(manager);
 
+	manager->createSystem<ThreadSystem>();
 	#if GARDEN_STEAMWORKS_SDK
 	manager->createSystem<SteamApiSystem>();
 	#endif
@@ -121,16 +124,16 @@ static void entryPoint()
 	manager->createSystem<GraphicsSystem>();
 	manager->createSystem<GpuProcessSystem>();
 	manager->createSystem<DeferredRenderSystem>();
+	manager->createSystem<HizRenderSystem>();
+	manager->createSystem<PbrLightingSystem>();
 	manager->createSystem<AtmosphereRenderSystem>();
-	// manager->createSystem<CloudsRenderSystem>();
+	manager->createSystem<CloudsRenderSystem>();
 	manager->createSystem<MeshRenderSystem>();
 	manager->createSystem<ModelStoreSystem>();
 	// manager->createSystem<OpaqueSpriteSystem>();
 	// manager->createSystem<CutoutSpriteSystem>();
 	// manager->createSystem<Opaque9SliceSystem>();
 	// manager->createSystem<Cutout9SliceSystem>();
-	manager->createSystem<HizRenderSystem>();
-	manager->createSystem<PbrLightingSystem>();
 	manager->createSystem<CsmRenderSystem>();
 	manager->createSystem<HbaoRenderSystem>();
 	#if GARDEN_NVIDIA_DLSS
@@ -142,7 +145,6 @@ static void entryPoint()
 	manager->createSystem<AutoExposureSystem>();
 	manager->createSystem<BlurRenderSystem>();
 	manager->createSystem<FxaaRenderSystem>();
-	manager->createSystem<ThreadSystem>();
 	// manager->createSystem<NetworkSystem>();
 
 	#if GARDEN_EDITOR
@@ -170,6 +172,7 @@ static void entryPoint()
 	manager->createSystem<MeshGizmosEditorSystem>();
 	manager->createSystem<DeferredRenderEditorSystem>();
 	manager->createSystem<AtmosphereEditorSystem>();
+	manager->createSystem<CloudsEditorSystem>();
 	manager->createSystem<SpriteRenderEditorSystem>();
 	manager->createSystem<NineSliceEditorSystem>();
 	manager->createSystem<PbrLightingEditorSystem>();

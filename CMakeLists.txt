@@ -1,4 +1,4 @@
-# Copyright 2024-2025 Nikita Fediuchin. All rights reserved.
+# Copyright 2024-2026 Nikita Fediuchin. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -57,10 +57,13 @@ set(GARDEN_DS_POOL_ACCEL_STRUCTURE_COUNT 32)
 # Use these setters for application debugging
 # set(GARDEN_RELEASE_EDITOR ON CACHE BOOL "" FORCE)
 # set(GARDEN_RELEASE_DEBUGGING ON CACHE BOOL "" FORCE)
+# set(GARDEN_DEBUG_SHADERS ON CACHE BOOL "" FORCE)
+# set(GARDEN_DEBUG_BUILD_TOOLS ON CACHE BOOL "" FORCE)
 # set(GARDEN_DEBUG_PACK_RESOURCES ON CACHE BOOL "" FORCE)
 # set(GARDEN_USE_GAPI_VALIDATIONS ON CACHE BOOL "" FORCE)
 # set(GARDEN_USE_TRACY_PROFILER ON CACHE BOOL "" FORCE)
 # set(GARDEN_USE_ASAN ON CACHE BOOL "" FORCE)
+# set(GARDEN_USE_MESA_RGP ON CACHE BOOL "" FORCE)
 
 set(GARDEN_USE_NVIDIA_DLSS ON CACHE BOOL "" FORCE)
 # set(GARDEN_USE_STEAMWORKS_SDK ON CACHE BOOL "" FORCE)
@@ -95,7 +98,10 @@ endif()
 target_include_directories(garden-demo PUBLIC ${GARDEN_DEMO_INCLUDE_DIRS})
 target_link_libraries(garden-demo ${GARDEN_DEMO_LINK_LIBS})
 set_target_properties(garden-demo PROPERTIES OUTPUT_NAME ${GARDEN_APP_NAME})
-add_dependencies(garden-demo packer gslc json2bson equi2cube)
+
+if (GARDEN_BUILD_TOOLS)
+	add_dependencies(garden-demo packer gslc json2bson equi2cube)
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	set_target_properties(garden-demo PROPERTIES BUILD_RPATH "\$ORIGIN")

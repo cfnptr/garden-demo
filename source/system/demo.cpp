@@ -42,15 +42,15 @@ void MainSystem::postInit()
 	auto pbrLightingView = manager->add<PbrLightingComponent>(graphicsSystem->camera);
 	pbrLightingView->setCubemapMode(PbrCubemapMode::Dynamic);
 
-	auto sun = manager->createEntity();
-	manager->reserveComponents(sun, 4);
+	auto directionalLight = manager->createEntity();
+	manager->reserveComponents(directionalLight, 4);
 
-	auto transformView = manager->add<TransformComponent>(sun);
+	auto transformView = manager->add<TransformComponent>(directionalLight);
 	transformView->setRotation(lookAtQuat(normalize3(-f32x4(1.0f, 6.0f, 2.0f))));
 	#if GARDEN_DEBUG || GARDEN_EDITOR
-	transformView->debugName = "Sun";
-	manager->add<DoNotDestroyComponent>(sun);
-	manager->add<DoNotSerializeComponent>(sun);
+	transformView->debugName = "Directional Light";
+	manager->add<DoNotDestroyComponent>(directionalLight);
+	manager->add<DoNotSerializeComponent>(directionalLight);
 	#endif
-	graphicsSystem->directionalLight = sun;
+	graphicsSystem->directionalLight = directionalLight;
 }
